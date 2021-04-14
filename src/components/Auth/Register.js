@@ -1,4 +1,5 @@
 import React, { Component } from 'react'
+import firebase from '../../firebase'
 import {
   Grid,
   Form,
@@ -11,11 +12,31 @@ import {
 import { Link } from 'react-router-dom'
 
 class Register extends Component {
-  state = {}
+  state = {
+    username: '',
+    email: '',
+    password: '',
+    passwordConfirmation: '',
+  }
 
-  handleChange = () => {}
+  handleChange = (event) => {
+    this.setState({ [event.target.name]: event.target.value })
+  }
+
+  handleSubmit = (event) => {
+    event.preventDefault()
+    firebase
+      .auth()
+      .createUserWithEmailAndPassword(this.state.email, this.state.password)
+      .then((createdUser) => {
+        console.log(createdUser)
+      })
+      .catch((err) => console.log(err))
+  }
 
   render() {
+    const { username, email, password, passwordConfirmation } = this.state
+
     return (
       <div>
         <Grid textAlign="center" verticalAlign="middle" className="app">
@@ -33,6 +54,7 @@ class Register extends Component {
                   iconPosition="left"
                   placeholder="Username"
                   onChange={this.handleChange}
+                  value={username}
                   type="text"
                 />
 
@@ -43,6 +65,7 @@ class Register extends Component {
                   iconPosition="left"
                   placeholder="Email Address"
                   onChange={this.handleChange}
+                  value={email}
                   type="email"
                 />
 
@@ -53,6 +76,7 @@ class Register extends Component {
                   iconPosition="left"
                   placeholder="Password"
                   onChange={this.handleChange}
+                  value={password}
                   type="password"
                 />
 
@@ -63,10 +87,16 @@ class Register extends Component {
                   iconPosition="left"
                   placeholder="Password Confirmation"
                   onChange={this.handleChange}
+                  value={passwordConfirmation}
                   type="password"
                 />
 
-                <Button color="orange" fluid size="large">
+                <Button
+                  color="orange"
+                  fluid
+                  size="large"
+                  onClick={this.handleSubmit}
+                >
                   Submit
                 </Button>
               </Segment>
