@@ -1,5 +1,6 @@
 import React, { Component } from 'react'
 import firebase from '../../firebase'
+import md5 from 'md5'
 import {
   Grid,
   Form,
@@ -19,8 +20,10 @@ class Register extends Component {
     passwordConfirmation: '',
     errors: [],
     loading: false,
+    usersRef: firebase.database().ref('users'),
   }
 
+  /* ------- Hanlde Err */
   isFormValid = () => {
     let errors = []
     let error
@@ -57,8 +60,18 @@ class Register extends Component {
     }
   }
 
+  // add class to field that be err
+  handleInputError = (errors, inputName) => {
+    return errors.some((error) =>
+      error.message.toLowerCase().includes(inputName),
+    )
+      ? 'error'
+      : ''
+  }
+
   displayErrors = (errors) =>
     errors.map((error, i) => <p key={i}>{error.message}</p>)
+  /* ------- Hanlde Err */
 
   handleChange = (event) => {
     this.setState({ [event.target.name]: event.target.value })
@@ -74,7 +87,26 @@ class Register extends Component {
         .createUserWithEmailAndPassword(this.state.email, this.state.password)
         .then((createdUser) => {
           console.log(createdUser)
-          this.setState({ loading: false })
+          createdUser.user
+            .updateProfile({
+              displayName: this.state.username,
+              photoURL: `https://s.gravatar.com/avatar/${md5(
+                createdUser.user.email,
+              )}`,
+            })
+            .then(() => {
+              this.setState({ loading: false })
+              this.saveUser(createdUser).then(() => {
+                console.log('User saved')
+              }) // save to database
+            })
+            .catch((err) => {
+              console.log(err)
+              this.setState({
+                errors: this.state.errors.concat(err),
+                loading: false,
+              })
+            })
         })
         .catch((err) => {
           console.log(err)
@@ -86,12 +118,12 @@ class Register extends Component {
     }
   }
 
-  handleInputError = (errors, inputName) => {
-    return errors.some((error) =>
-      error.message.toLowerCase().includes(inputName),
-    )
-      ? 'error'
-      : ''
+  // save user to realtime database after register success
+  saveUser = (createdUser) => {
+    return this.state.usersRef.child(createdUser.user.uid).set({
+      name: createdUser.user.displayName,
+      avatar: createdUser.user.photoURL,
+    })
   }
 
   render() {
