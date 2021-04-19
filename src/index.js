@@ -3,6 +3,7 @@ import ReactDOM from 'react-dom'
 import App from './components/App'
 import Login from './components/Auth/Login'
 import Register from './components/Auth/Register'
+import Spinner from './Spinner'
 import firebase from './firebase'
 import reportWebVitals from './reportWebVitals'
 import 'semantic-ui-css/semantic.min.css'
@@ -27,15 +28,16 @@ class Root extends React.Component {
     firebase.auth().onAuthStateChanged((user) => {
       console.log(user)
       if (user) {
-        // console.log(user)
         this.props.setUser(user) // ??????
         this.props.history.push('/')
       }
     })
-  }
+  } // check user was logined or not
 
   render() {
-    return (
+    return this.props.isLoading ? (
+      <Spinner />
+    ) : (
       <Switch>
         <Route exact path="/" component={App} />
         <Route path="/login" component={Login} />
@@ -45,7 +47,13 @@ class Root extends React.Component {
   }
 }
 
-const RootWithAuth = withRouter(connect(null, { setUser })(Root))
+const mapStateToProps = (state) => {
+  return {
+    isLoading: state.user.isLoading,
+  }
+}
+
+const RootWithAuth = withRouter(connect(mapStateToProps, { setUser })(Root))
 
 ReactDOM.render(
   <Provider store={store}>
@@ -60,5 +68,3 @@ ReactDOM.render(
 // to log results (for example: reportWebVitals(console.log))
 // or send to an analytics endpoint. Learn more: https://bit.ly/CRA-vitals
 reportWebVitals()
-
-// research fn connect, { setUser }, mapDispatchToProps
