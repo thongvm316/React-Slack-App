@@ -20,7 +20,7 @@ class Channels extends Component {
     this.addListeners()
   }
 
-  // purpose
+  // ??? purpose
   componentWillUnmount() {
     this.removeListener()
   }
@@ -34,13 +34,12 @@ class Channels extends Component {
     let loadedChannels = []
     this.state.channelsRef.on('child_added', (snap) => {
       loadedChannels.push(snap.val())
-      this.setState({ channels: loadedChannels }, () => this.setFirstChannel()) // purpose ???
+      this.setState({ channels: loadedChannels }, () => this.setFirstChannel())
     })
   }
 
   // Used for page load first time and active first channel
   setFirstChannel = () => {
-    console.log('test')
     const firstChannel = this.state.channels[0]
     if (this.state.firstLoad && this.state.channels.length > 0) {
       this.setActiveChannel(firstChannel)
@@ -54,7 +53,6 @@ class Channels extends Component {
   addChannel = () => {
     const { channelsRef, channelName, channelDetails, user } = this.state
     const key = channelsRef.push().key // get uuid
-    console.log({ channelsRef, key })
 
     const newChannel = {
       id: key,
