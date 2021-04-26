@@ -57,7 +57,7 @@ export default class MessageForm extends Component {
   }
 
   render() {
-    const { errors } = this.state
+    const { errors, message, loading } = this.state
 
     return (
       <Segment>
@@ -67,6 +67,7 @@ export default class MessageForm extends Component {
           onChange={this.handleChange}
           style={{ marginBottom: '0.7em' }}
           label={<Button icon={'add'} />}
+          value={message}
           labelPosition="left"
           placeholder="Write your message"
           className={
@@ -79,6 +80,7 @@ export default class MessageForm extends Component {
           <Button
             onClick={this.sendMessage}
             color="orange"
+            disabled={loading}
             content="Add Reply"
             labelPosition="left"
             icon="edit"

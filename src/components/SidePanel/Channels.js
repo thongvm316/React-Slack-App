@@ -11,7 +11,7 @@ class Channels extends Component {
     channels: [],
     channelName: '',
     channelDetails: '',
-    channelsRef: firebase.database().ref('channels'), // create collection channels
+    channelsRef: firebase.database().ref('channels'), // create collection channels, if channel is not create --> auto create
     modal: false,
     firstLoad: true,
   }

@@ -93,7 +93,7 @@ class Register extends Component {
               photoURL: `https://s.gravatar.com/avatar/${md5(
                 createdUser.user.email,
               )}`,
-            })
+            }) //  update to object which is create after register
             .then(() => {
               this.setState({ loading: false })
               this.saveUser(createdUser).then(() => {
