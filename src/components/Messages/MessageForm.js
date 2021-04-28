@@ -4,6 +4,7 @@ import { Segment, Button, Input } from 'semantic-ui-react'
 import firebase from '../../firebase'
 
 import FileModal from './FileModal'
+import ProgressBar from './ProgressBar'
 
 export default class MessageForm extends Component {
   state = {
@@ -75,7 +76,7 @@ export default class MessageForm extends Component {
   uploadFile = (file, metadata) => {
     const pathToUpload = this.state.channel.id
     const ref = this.props.messagesRef
-    const filePath = `chat/public/${uuidv4()}.jpg`
+    const filePath = `chat/public/${uuidv4()}.jpg` // position store img on firebase storage
 
     this.setState(
       {
@@ -89,8 +90,9 @@ export default class MessageForm extends Component {
             const percentUploaded = Math.round(
               (snap.bytesTransferred / snap.totalBytes) * 100,
             )
+            this.props.isProgressBarVisible(percentUploaded)
             this.setState({ percentUploaded })
-          }, // Purpose
+          }, // show progress bar when user upload
           (err) => {
             console.log(err)
             this.setState({
@@ -134,7 +136,14 @@ export default class MessageForm extends Component {
   }
 
   render() {
-    const { errors, message, loading, modal } = this.state
+    const {
+      errors,
+      message,
+      loading,
+      modal,
+      uploadState,
+      percentUploaded,
+    } = this.state
 
     return (
       <Segment>
@@ -169,13 +178,17 @@ export default class MessageForm extends Component {
             labelPosition="right"
             icon="cloud upload"
           />
-
-          <FileModal
-            modal={modal}
-            closeModal={this.closeModal}
-            uploadFile={this.uploadFile}
-          />
         </Button.Group>
+
+        <FileModal
+          modal={modal}
+          closeModal={this.closeModal}
+          uploadFile={this.uploadFile}
+        />
+        <ProgressBar
+          uploadState={uploadState}
+          percentUploaded={percentUploaded}
+        />
       </Segment>
     )
   }
