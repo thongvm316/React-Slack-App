@@ -61,14 +61,13 @@ class Messages extends React.Component {
       const hasUser =
         message.user && message.user.name && message.user.name.match(regex)
       if (hasMessage || hasUser) {
-        console.log('object')
         acc.push(message)
       }
       return acc
     }, [])
     this.setState({ searchResults })
     setTimeout(() => this.setState({ searchLoading: false }), 1000)
-  }
+  } // look for message or user
 
   countUniqueUsers = (messages) => {
     const uniqueUsers = messages.reduce((acc, message) => {
@@ -95,8 +94,16 @@ class Messages extends React.Component {
   displayChannelName = (channel) => (channel ? `#${channel.name}` : '')
 
   render() {
-    // prettier-ignore
-    const { messagesRef, messages, channel, user, numUniqueUsers, searchTerm, searchResults, searchLoading } = this.state;
+    const {
+      messagesRef,
+      messages,
+      channel,
+      user,
+      numUniqueUsers,
+      searchTerm,
+      searchResults,
+      searchLoading,
+    } = this.state
 
     return (
       <React.Fragment>

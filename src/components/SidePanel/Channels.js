@@ -126,7 +126,7 @@ class Channels extends Component {
 
     return (
       <>
-        <Menu.Menu style={{ paddingBottom: '2rem' }}>
+        <Menu.Menu style={{ paddingBottom: '2rem' }} className="menu">
           <Menu.Item>
             <span>
               <Icon name="exchange" /> CHANNELS
