@@ -1,8 +1,10 @@
 import React, { Component } from 'react'
 import firebase from '../../firebase'
+import { connect } from 'react-redux'
+import { setCurrentChannel, setPrivateChannel } from '../../actions'
 import { Menu, Icon } from 'semantic-ui-react'
 
-export default class DirectMessages extends Component {
+class DirectMessages extends Component {
   state = {
     user: this.props.currentUser,
     users: [],
@@ -21,6 +23,8 @@ export default class DirectMessages extends Component {
 
   addListeners = (currentUserUid) => {
     let loadedUsers = []
+
+    // get all users in database
     this.state.userRef.on('child_added', (snap) => {
       // snap.val() -> get all user in db
       // snap.key -> get uid(key) of each users in db
@@ -55,7 +59,6 @@ To avoid problems when a connection is dropped before the requests can be transf
 Note that onDisconnect operations are only triggered once. If you want an operation to occur each time a disconnect occurs, you'll need to re-establish the onDisconnect operations each time you reconnec */
 
     this.state.presenceRef.on('child_added', (snap) => {
-      console.log(snap.key)
       if (currentUserUid !== snap.key) {
         this.addStatusToUser(snap.key)
       }
@@ -66,11 +69,11 @@ Note that onDisconnect operations are only triggered once. If you want an operat
         this.addStatusToUser(snap.key, false)
       }
     })
-  } // ???
+  }
 
   addStatusToUser = (userId, connected = true) => {
     const updateUsers = this.state.users.reduce((acc, user) => {
-      if (user.id === userId) {
+      if (user.uid === userId) {
         user['status'] = `${connected ? 'online' : 'offline'}`
       }
 
@@ -81,6 +84,24 @@ Note that onDisconnect operations are only triggered once. If you want an operat
   }
 
   isUserOnline = (user) => user.status === 'online'
+
+  changeChannel = (user) => {
+    const channelId = this.getChannelId(user.uid)
+    const channelData = {
+      id: channelId,
+      name: user.name,
+    }
+
+    this.props.setCurrentChannel(channelData)
+    this.props.setPrivateChannel(true)
+  }
+
+  getChannelId = (userId) => {
+    const currentUserId = this.state.user.uid
+    return userId < currentUserId
+      ? `${userId}/${currentUserId}`
+      : `${currentUserId}/${userId}`
+  }
 
   render() {
     const { users } = this.state
@@ -97,7 +118,7 @@ Note that onDisconnect operations are only triggered once. If you want an operat
         {users.map((user) => (
           <Menu.Item
             key={user.uid}
-            onClick={() => console.log(user)}
+            onClick={() => this.changeChannel(user)}
             style={{ opacity: 0.7, fontStyle: 'italic' }}
           >
             <Icon
@@ -111,3 +132,7 @@ Note that onDisconnect operations are only triggered once. If you want an operat
     )
   }
 }
+
+export default connect(null, { setCurrentChannel, setPrivateChannel })(
+  DirectMessages,
+)
