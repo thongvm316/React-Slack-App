@@ -46,13 +46,19 @@ export default class MessageForm extends Component {
   }
 
   // Get value from Form and store to realtime database
+  /* When channel is private (user chat with each other), this moment channel = PDvJJW2IcLatFhJYv1BsTIU2iH23/Sc4aFFQUHXTXXMWMwH5eJZHImLk2, and when user send message to other user with child(PDvJJW2IcLatFhJYv1BsTIU2iH23/Sc4aFFQUHXTXXMWMwH5eJZHImLk2), after database will store value according to structure:
+    PDvJJW2IcLatFhJYv1BsTIU2iH23
+      Sc4aFFQUHXTXXMWMwH5eJZHImLk2
+        uid: message
+  */
   sendMessage = () => {
-    const { messagesRef } = this.props
+    const { getMessagesRef } = this.props
     const { message, channel } = this.state
 
     if (message) {
       this.setState({ loading: true })
-      messagesRef
+      console.log(channel.id)
+      getMessagesRef()
         .child(channel.id)
         .push()
         .set(this.createMessage())
@@ -73,10 +79,18 @@ export default class MessageForm extends Component {
     }
   }
 
+  getPath = () => {
+    if (this.props.isPrivateChannel) {
+      return `chat/private-${this.state.channel.id}`
+    } else {
+      return 'chat/public'
+    }
+  }
+
   uploadFile = (file, metadata) => {
     const pathToUpload = this.state.channel.id
-    const ref = this.props.messagesRef
-    const filePath = `chat/public/${uuidv4()}.jpg` // position store img on firebase storage
+    const ref = this.props.getMessagesRef()
+    const filePath = `${this.getPath()}/${uuidv4()}.jpg` // position store img on firebase storage
 
     this.setState(
       {
@@ -90,7 +104,7 @@ export default class MessageForm extends Component {
             const percentUploaded = Math.round(
               (snap.bytesTransferred / snap.totalBytes) * 100,
             )
-            this.props.isProgressBarVisible(percentUploaded)
+            // this.props.isProgressBarVisible(percentUploaded)
             this.setState({ percentUploaded })
           }, // show progress bar when user upload
           (err) => {
