@@ -57,7 +57,7 @@ export default class MessageForm extends Component {
 
     if (message) {
       this.setState({ loading: true })
-      console.log(channel.id)
+      // console.log(channel.id)
       getMessagesRef()
         .child(channel.id)
         .push()
