@@ -46,6 +46,7 @@ class Messages extends React.Component {
         messagesLoading: false,
       })
       this.countUniqueUsers(loadedMessages)
+      this.countUserPosts(loadedMessages)
     })
   } // get all messages in database
 
@@ -71,7 +72,7 @@ class Messages extends React.Component {
   hanldeStar = () => {
     this.setState(
       (prevState) => {
-        console.log(prevState)
+        // console.log(prevState)
         return {
           isChannedStarred: !prevState.isChannedStarred,
         }
@@ -144,6 +145,23 @@ class Messages extends React.Component {
     const plural = uniqueUsers.length > 1 || uniqueUsers.length === 0
     const numUniqueUsers = `${uniqueUsers.length} user${plural ? 's' : ''}`
     this.setState({ numUniqueUsers })
+  }
+
+  countUserPosts = (messages) => {
+    let userPosts = messages.reduce((acc, message) => {
+      console.log(acc, message)
+      console.log(message.user.name in acc)
+      if (message.user.name in acc) {
+        acc[message.user.name].count += 1
+      } else {
+        acc[message.user.name] = {
+          avatar: message.user.avatar,
+          count: 1,
+        }
+      }
+      return acc
+    }, {})
+    console.log(userPosts)
   }
 
   displayMessages = (messages) =>
