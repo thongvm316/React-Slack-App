@@ -22,27 +22,23 @@ class MetaPanel extends React.Component {
     this.setState({ activeIndex: newIndex })
   }
 
+  formatCount = (num) => (num > 1 || num === 0 ? `${num} posts` : `${num} post`)
+
   displayTopPosters = (posts) => {
-    // console.log(posts)
-    // const test = Object.entries(posts)
-    // console.log(test)
-    // const test1 = test.sort((a, b) => b[1] - a[1])
-    // console.log(test1)
-    // console.log(test1[0])
     return Object.entries(posts)
-      .sort((a, b) => b[1] - a[1])
+      .sort((a, b) => b[1].count - a[1].count)
       .map(([key, val], i) => {
-        console.log([key, val])
         return (
           <List.Item key={i}>
             <Image avatar src={val.avatar} />
             <List.Content>
               <List.Header as="a">{key}</List.Header>
-              <List.Description>{val.count} posts</List.Description>
+              <List.Description>{this.formatCount(val.count)}</List.Description>
             </List.Content>
           </List.Item>
         )
       })
+      .slice(0, 5)
   }
 
   render() {
