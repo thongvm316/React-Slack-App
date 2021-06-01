@@ -8,6 +8,7 @@ import MessagesHeader from './MessagesHeader'
 import MessageForm from './MessageForm'
 import Message from './Message'
 import Typing from './Typing'
+import Skeleton from './Skeleton'
 
 class Messages extends React.Component {
   state = {
@@ -38,6 +39,16 @@ class Messages extends React.Component {
     }
   }
 
+  componentDidUpdate(prevProps, prevState) {
+    if (this.messageEnd) {
+      this.scrollToBottom()
+    }
+  }
+
+  scrollToBottom = () => {
+    this.messageEnd.scrollIntoView({ behavior: 'smooth' })
+  }
+
   addListeners = (channelId) => {
     this.addMessageListener(channelId)
     this.addTypingListeners(channelId)
@@ -65,7 +76,7 @@ class Messages extends React.Component {
     })
 
     this.state.connectedRef.on('value', (snap) => {
-      console.log(snap.val())
+      // console.log(snap.val())
       if (snap.val() === true) {
         this.state.typingRef
           .child(channelId)
@@ -233,6 +244,15 @@ class Messages extends React.Component {
       </div>
     ))
 
+  displayMessageSkeleton = (loading) =>
+    loading ? (
+      <React.Fragment>
+        {[...Array(10)].map((_, i) => {
+          return <Skeleton key={i} />
+        })}
+      </React.Fragment>
+    ) : null
+
   render() {
     const {
       messagesRef,
@@ -246,6 +266,7 @@ class Messages extends React.Component {
       privateChannel,
       isChannedStarred,
       typingUsers,
+      messagesLoading,
     } = this.state
 
     return (
@@ -262,10 +283,12 @@ class Messages extends React.Component {
 
         <Segment>
           <Comment.Group className="messages">
+            {this.displayMessageSkeleton(messagesLoading)}
             {searchTerm
               ? this.displayMessages(searchResults)
               : this.displayMessages(messages)}
             {this.displayTypingUsers(typingUsers)}
+            <div ref={(node) => (this.messageEnd = node)}></div>
           </Comment.Group>
         </Segment>
 
