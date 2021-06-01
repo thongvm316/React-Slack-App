@@ -9,6 +9,7 @@ import ProgressBar from './ProgressBar'
 export default class MessageForm extends Component {
   state = {
     storageRef: firebase.storage().ref(), // ref into firebase storage
+    typingRef: firebase.database().ref('typing'),
     percentUploaded: 0,
     uploadState: '',
     uploadTask: null,
@@ -24,7 +25,15 @@ export default class MessageForm extends Component {
   closeModal = () => this.setState({ modal: false })
 
   handleChange = (e) => {
-    this.setState({ [e.target.name]: e.target.value })
+    this.setState({ [e.target.name]: e.target.value }, () => {
+      const { message, typingRef, channel, user } = this.state
+      // console.log('handleKeyDown', 'message: ' + message)
+      if (message) {
+        typingRef.child(channel.id).child(user.uid).set(user.displayName) // set() fn --> add value to key .child(user.uid)
+      } else {
+        typingRef.child(channel.id).child(user.uid).remove()
+      }
+    })
   }
 
   createMessage = (fileUrl = null) => {
@@ -53,7 +62,7 @@ export default class MessageForm extends Component {
   */
   sendMessage = () => {
     const { getMessagesRef } = this.props
-    const { message, channel } = this.state
+    const { message, channel, typingRef, user } = this.state
 
     if (message) {
       this.setState({ loading: true })
@@ -64,6 +73,7 @@ export default class MessageForm extends Component {
         .set(this.createMessage())
         .then(() => {
           this.setState({ loading: false, message: '', errors: [] })
+          typingRef.child(channel.id).child(user.uid).remove() // after send messages, remove typing user
         })
         .catch((err) => {
           console.log(err)
@@ -149,6 +159,16 @@ export default class MessageForm extends Component {
       })
   }
 
+  // handleKeyDown = () => {
+  //   const { message, typingRef, channel, user } = this.state
+  //   console.log('handleKeyDown', 'message: ' + message)
+  //   if (message) {
+  //     typingRef.child(channel.id).child(user.uid).set(user.displayName) // set() fn --> add value to key .child(user.uid)
+  //   } else {
+  //     typingRef.child(channel.id).child(user.uid).remove()
+  //   }
+  // }
+
   render() {
     const {
       errors,
@@ -165,6 +185,7 @@ export default class MessageForm extends Component {
           fluid
           name="message"
           onChange={this.handleChange}
+          // onKeyDown={this.handleKeyDown}
           style={{ marginBottom: '0.7em' }}
           label={<Button icon={'add'} />}
           value={message}

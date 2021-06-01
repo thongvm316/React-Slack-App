@@ -22,13 +22,13 @@ class Channels extends Component {
     channelDetails: '',
     channelsRef: firebase.database().ref('channels'), // create collection channels, if channel is not create --> auto create
     messagesRef: firebase.database().ref('messages'),
+    typingRef: firebase.database().ref('typing'),
     notifications: [],
     modal: false,
     firstLoad: true,
   }
 
   componentDidMount() {
-    console.log('test dismount')
     this.addListeners()
   }
 
@@ -46,7 +46,7 @@ class Channels extends Component {
   addListeners() {
     let loadedChannels = []
     this.state.channelsRef.on('child_added', (snap) => {
-      console.table('addListeners', snap.key)
+      // console.table('addListeners', snap.key)
       loadedChannels.push(snap.val())
       this.setState({ channels: loadedChannels }, () => {
         this.setFirstChannel()
@@ -75,12 +75,12 @@ This event will trigger once with the initial data stored at this location, and 
   }
 
   handleNotifications = (channelId, currentChannelId, notifications, snap) => {
-    console.table(
-      channelId,
-      currentChannelId,
-      notifications,
-      snap.numChildren(),
-    )
+    // console.table(
+    //   channelId,
+    //   currentChannelId,
+    //   notifications,
+    //   snap.numChildren(),
+    // )
     let lastTotal = 0
     let index = notifications.findIndex((notification) => {
       return notification.id === channelId
@@ -195,6 +195,10 @@ This event will trigger once with the initial data stored at this location, and 
   changeChannel = (channel) => {
     this.setActiveChannel(channel)
     this.clearNotifications()
+    this.state.typingRef
+      .child(this.state.channel.id)
+      .child(this.state.user.uid)
+      .remove()
     this.props.setCurrentChannel(channel)
     this.props.setPrivateChannel(false)
     this.setState({ channel })

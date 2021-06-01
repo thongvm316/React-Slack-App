@@ -1,5 +1,1 @@
-2. // ??? purpose
-   componentWillUnmount() {
-   this.removeListener()
-   }
-
+2. Read function

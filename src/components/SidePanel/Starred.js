@@ -24,7 +24,7 @@ class Starred extends Component {
       .child('starred')
       .on('child_added', (snap) => {
         const starredChannel = { id: snap.key, ...snap.val() }
-        console.log('child_added', starredChannel)
+        // console.log('child_added', starredChannel)
         this.setState({
           starredChannels: [...this.state.starredChannels, starredChannel],
         })
