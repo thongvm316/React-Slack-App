@@ -88,7 +88,7 @@ class UserPanel extends Component {
     const { storageRef, userRef, blob, metadata } = this.state
 
     storageRef
-      .child(`avatars/user-${userRef.uid}`)
+      .child(`avatars/users/${userRef.uid}`)
       .put(blob, metadata)
       .then((snap) => {
         console.log(snap)
