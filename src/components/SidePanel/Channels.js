@@ -38,8 +38,10 @@ class Channels extends Component {
   }
 
   removeListener = () => {
-    console.log('removelistener')
     this.state.channelsRef.off()
+    this.state.channels.forEach((channel) => {
+      this.state.messagesRef.child(channel.id).off()
+    })
   }
 
   // get all data of channel after add

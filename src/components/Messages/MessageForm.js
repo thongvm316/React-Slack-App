@@ -24,15 +24,18 @@ export default class MessageForm extends Component {
     emojiPicker: false,
   }
 
+  componentWillUnmount() {
+    if (this.state.uploadTask !== null) {
+      this.state.uploadTask.cancel() // like off() method in database
+      this.setState({ uploadTask: null })
+    }
+  }
+
   openModal = () => this.setState({ modal: true })
   closeModal = () => this.setState({ modal: false })
 
   handleChange = (e) => {
-    // this.setState({ [e.target.name]: e.target.value })
     this.setState({ [e.target.name]: e.target.value }, () => {
-      if (e.keyCode === 13) {
-        this.sendMessage()
-      }
       const { message, typingRef, channel, user } = this.state
       // console.log('handleKeyDown', 'message: ' + message)
       if (message) {
@@ -192,18 +195,11 @@ export default class MessageForm extends Component {
       })
   }
 
-  // handleKeyDown = (e) => {
-  //   if (e.keyCode === 13) {
-  //     this.sendMessage()
-  //   }
-  //   const { message, typingRef, channel, user } = this.state
-  //   console.log('handleKeyDown', 'message: ' + message)
-  //   if (message) {
-  //     typingRef.child(channel.id).child(user.uid).set(user.displayName) // set() fn --> add value to key .child(user.uid)
-  //   } else {
-  //     typingRef.child(channel.id).child(user.uid).remove()
-  //   }
-  // }
+  handleKeyDown = (e) => {
+    if (e.keyCode === 13) {
+      this.sendMessage()
+    }
+  }
 
   render() {
     const {
@@ -231,7 +227,7 @@ export default class MessageForm extends Component {
           fluid
           name="message"
           onChange={this.handleChange}
-          // onKeyDown={this.handleKeyDown}
+          onKeyDown={this.handleKeyDown}
           style={{ marginBottom: '0.7em' }}
           label={
             <Button

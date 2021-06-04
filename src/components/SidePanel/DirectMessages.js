@@ -9,7 +9,7 @@ class DirectMessages extends Component {
     activeChannel: '',
     user: this.props.currentUser,
     users: [],
-    userRef: firebase.database().ref('users'),
+    usersRef: firebase.database().ref('users'),
     connectedRef: firebase.database().ref('.info/connected'), // For many presence-related features, it is useful for your app to know when it is online or offline. Firebase Realtime Database provides a special location at /.info/connected which is updated every time the Firebase Realtime Database client's connection state changes
     // /.info/connected is a boolean value which is not synchronized between Realtime Database clients because the value is dependent on the state of the client. In other words, if one client reads /.info/connected as false, this is no guarantee that a separate client will also read false.
     // --> Fllow state of cline is online or offline // Location which is store user online or offline
@@ -22,11 +22,17 @@ class DirectMessages extends Component {
     }
   }
 
+  componentWillUnmount() {
+    this.state.usersRef.off()
+    this.state.presenceRef.off()
+    this.state.connectedRef.off()
+  }
+
   addListeners = (currentUserUid) => {
     let loadedUsers = []
 
     // get all users in database
-    this.state.userRef.on('child_added', (snap) => {
+    this.state.usersRef.on('child_added', (snap) => {
       // snap.val() -> get all user in db
       // snap.key -> get uid(key) of each users in db
       if (currentUserUid !== snap.key) {
