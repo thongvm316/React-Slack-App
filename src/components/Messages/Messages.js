@@ -43,6 +43,7 @@ class Messages extends React.Component {
   }
 
   componentDidUpdate(prevProps, prevState) {
+    // console.log('componentDidUpdate')
     if (this.messageEnd) {
       this.scrollToBottom()
     }
@@ -64,13 +65,16 @@ class Messages extends React.Component {
   }
 
   addListeners = (channelId) => {
-    this.addMessageListener(channelId)
+    this.addMessageListener(
+      channelId,
+      this.updateMessageLoadingStateWhenMessagesHasNoData,
+    )
     this.addTypingListeners(channelId)
   }
 
   addToListeners = (id, ref, event) => {
     const { listeners } = this.state
-    console.table({ id, ref, event, listeners })
+    // console.table({ id, ref, event, listeners })
     const index = listeners.findIndex((listener) => {
       // const obj = {
       //   listenerId: listener.id,
@@ -135,7 +139,10 @@ class Messages extends React.Component {
     }) // purpose: when user logout, then remove this user typing in database
   }
 
-  addMessageListener = (channelId) => {
+  addMessageListener = (
+    channelId,
+    updateMessageLoadingStateWhenMessagesHasNoData,
+  ) => {
     let loadedMessages = []
     const ref = this.getMessagesRef()
     ref.child(channelId).on('child_added', (snap) => {
@@ -150,7 +157,17 @@ class Messages extends React.Component {
       this.countUserPosts(loadedMessages)
     })
     this.addToListeners(channelId, ref, 'child_added')
+    updateMessageLoadingStateWhenMessagesHasNoData()
   } // get all messages in database
+
+  updateMessageLoadingStateWhenMessagesHasNoData = () => {
+    setTimeout(() => {
+      if (this.state.messages.length === 0) {
+        this.setState({ messagesLoading: false })
+      }
+      // console.log('test callback')
+    }, 1000)
+  }
 
   addUserStarsListener = (channelId, userId) => {
     this.state.usersRef
@@ -293,14 +310,16 @@ class Messages extends React.Component {
       </div>
     ))
 
-  displayMessageSkeleton = (loading) =>
-    loading ? (
+  displayMessageSkeleton = (loading) => {
+    // console.log(this.state.messagesLoading)
+    return loading ? (
       <React.Fragment>
         {[...Array(10)].map((_, i) => {
           return <Skeleton key={i} />
         })}
       </React.Fragment>
     ) : null
+  }
 
   render() {
     const {

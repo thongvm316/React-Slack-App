@@ -1,6 +1,7 @@
 import React, { Component } from 'react'
 import firebase from '../../firebase'
 import AvatarEditor from 'react-avatar-editor'
+
 import {
   Grid,
   Icon,
@@ -15,6 +16,7 @@ import {
 class UserPanel extends Component {
   state = {
     user: this.props.currentUser,
+    channel: this.props.currentChannel,
     modal: false,
     previewImage: '',
     croppedImage: '',
@@ -23,6 +25,8 @@ class UserPanel extends Component {
     storageRef: firebase.storage().ref(),
     userRef: firebase.auth().currentUser,
     usersRef: firebase.database().ref('users'),
+    presenceRef: firebase.database().ref('presence'),
+    typingRef: firebase.database().ref('typing'),
     metadata: {
       contentType: 'image/jpeg',
     },
@@ -51,12 +55,34 @@ class UserPanel extends Component {
     },
   ]
 
+  // componentDidMount() {
+  //   console.log(
+  //     'Sign out',
+  //     this.state.user.uid,
+  //     this.state.presenceRef.child(this.state.user.uid),
+  //   )
+
+  //   this.state.presenceRef.child(this.state.user.uid).remove()
+  // }
+
   handleSignout = () => {
+    this.state.presenceRef.child(this.state.user.uid).remove((err) => {
+      if (err !== null) {
+        console.log(err)
+      }
+    })
+
+    this.state.typingRef
+      .child(this.state.channel.id)
+      .child(this.state.user.uid)
+      .remove((err) => console.log(err))
+
     firebase
       .auth()
       .signOut()
       .then(() => {
-        console.log('Sign out')
+        // console.log('Sign out')
+        firebase.database().goOffline()
       })
   }
 

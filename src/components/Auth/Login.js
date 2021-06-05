@@ -20,7 +20,6 @@ class Login extends Component {
   }
 
   /* ------- Hanlde Err */
-
   // add class to field that be err
   handleInputError = (errors, inputName) => {
     return errors.some((error) =>
@@ -47,7 +46,8 @@ class Login extends Component {
         .auth()
         .signInWithEmailAndPassword(this.state.email, this.state.password)
         .then((signedInUser) => {
-          console.log(signedInUser)
+          // console.log(signedInUser)
+          firebase.database().goOnline()
           this.setState({ loading: false })
         })
         .catch((error) => {

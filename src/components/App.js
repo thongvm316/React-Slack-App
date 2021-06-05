@@ -24,6 +24,7 @@ const App = ({
       key={currentUser && currentUser.uid} // ???
       currentUser={currentUser}
       primaryColor={primaryColor}
+      currentChannel={currentChannel}
     />
 
     <Grid.Column style={{ marginLeft: 320 }}>

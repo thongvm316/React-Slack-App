@@ -50,6 +50,7 @@ class DirectMessages extends Component {
         const ref = this.state.presenceRef.child(currentUserUid) // set key
         ref.set(true) // set value
         ref.onDisconnect().remove((err) => {
+          // console.log('onDisconnect')
           if (err !== null) {
             console.log(err)
           } // when client signout, remove feild in presence with uid of this client
