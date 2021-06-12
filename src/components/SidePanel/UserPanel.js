@@ -72,10 +72,21 @@ class UserPanel extends Component {
       }
     })
 
-    this.state.typingRef
-      .child(this.state.channel.id)
-      .child(this.state.user.uid)
-      .remove((err) => console.log(err))
+    const hasValueOfTypingRef = () => {
+      return this.state.typingRef
+        .once('value')
+        .then((snap) => console.log(snap.exists()))
+    }
+
+    if (hasValueOfTypingRef()) {
+      let channel = this.props.currentChannel
+      if (channel) {
+        this.state.typingRef
+          .child(channel.id)
+          .child(this.state.user.uid)
+          .remove((err) => console.log(err))
+      }
+    }
 
     firebase
       .auth()
@@ -158,17 +169,17 @@ class UserPanel extends Component {
         <Grid.Column>
           <Grid.Row style={{ padding: '1.2em', margin: 0 }}>
             {/* App Header */}
-            <Header inverted floated="left" as="h2">
-              <Icon name="code" />
+            <Header inverted floated='left' as='h2'>
+              <Icon name='code' />
               <Header.Content>DevChat</Header.Content>
             </Header>
 
             {/* User Dropdown */}
-            <Header style={{ padding: '0.25em' }} as="h4" inverted>
+            <Header style={{ padding: '0.25em' }} as='h4' inverted>
               <Dropdown
                 trigger={
                   <span>
-                    <Image src={user && user.photoURL} spaced="right" avatar />
+                    <Image src={user && user.photoURL} spaced='right' avatar />
                     {user.displayName}
                   </span>
                 }
@@ -184,12 +195,12 @@ class UserPanel extends Component {
               <Input
                 onChange={this.handleChange}
                 fluid
-                type="file"
-                label="New Avatar"
-                name="previewImage"
+                type='file'
+                label='New Avatar'
+                name='previewImage'
               />
               <Grid centered stackable columns={2}>
-                <Grid.Column className="ui center aligned grid">
+                <Grid.Column className='ui center aligned grid'>
                   {previewImage && (
                     <AvatarEditor
                       ref={(node) => {
@@ -219,18 +230,18 @@ class UserPanel extends Component {
             <Modal.Actions>
               {croppedImage && (
                 <Button
-                  color="green"
+                  color='green'
                   inverted
                   onClick={this.uploadCroppedImage}
                 >
-                  <Icon name="save" /> Change Avatar
+                  <Icon name='save' /> Change Avatar
                 </Button>
               )}
-              <Button color="green" inverted onClick={this.hanldeCropImage}>
-                <Icon name="image" /> Preview
+              <Button color='green' inverted onClick={this.hanldeCropImage}>
+                <Icon name='image' /> Preview
               </Button>
-              <Button color="red" inverted onClick={this.closeModal}>
-                <Icon name="remove" /> Cancel
+              <Button color='red' inverted onClick={this.closeModal}>
+                <Icon name='remove' /> Cancel
               </Button>
             </Modal.Actions>
           </Modal>
