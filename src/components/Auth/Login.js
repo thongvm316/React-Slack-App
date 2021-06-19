@@ -19,8 +19,8 @@ class Login extends Component {
     loading: false,
   }
 
-  /* ------- Hanlde Err */
-  // add class to field that be err
+  /* ------- Hanlde Err ------- */
+  // add class to field that would be err
   handleInputError = (errors, inputName) => {
     return errors.some((error) =>
       error.message.toLowerCase().includes(inputName),
@@ -31,7 +31,7 @@ class Login extends Component {
 
   displayErrors = (errors) =>
     errors.map((error, i) => <p key={i}>{error.message}</p>)
-  /* ------- Hanlde Err */
+  /* ------- Hanlde Err ------- */
 
   handleChange = (event) => {
     this.setState({ [event.target.name]: event.target.value })
@@ -67,44 +67,44 @@ class Login extends Component {
 
     return (
       <div>
-        <Grid textAlign="center" verticalAlign="middle" className="app">
+        <Grid textAlign='center' verticalAlign='middle' className='app'>
           <Grid.Column style={{ maxWidth: 450 }}>
-            <Header as="h1" color="violet" textAlign="center">
-              <Icon name="code branch" color="violet" />
+            <Header as='h1' color='violet' textAlign='center'>
+              <Icon name='code branch' color='violet' />
               Login to DevChat
             </Header>
-            <Form onSubmit={this.handleSubmit} size="large">
+            <Form onSubmit={this.handleSubmit} size='large'>
               <Segment stacked>
                 <Form.Input
                   fluid
-                  name="email"
-                  icon="mail"
-                  iconPosition="left"
-                  placeholder="Email Address"
+                  name='email'
+                  icon='mail'
+                  iconPosition='left'
+                  placeholder='Email Address'
                   onChange={this.handleChange}
                   value={email}
                   className={this.handleInputError(errors, 'user')}
-                  type="email"
+                  type='email'
                 />
 
                 <Form.Input
                   fluid
-                  name="password"
-                  icon="lock"
-                  iconPosition="left"
-                  placeholder="Password"
+                  name='password'
+                  icon='lock'
+                  iconPosition='left'
+                  placeholder='Password'
                   onChange={this.handleChange}
                   value={password}
                   className={this.handleInputError(errors, 'password')}
-                  type="password"
+                  type='password'
                 />
 
                 <Button
                   className={loading ? 'loading' : ''}
                   disabled={loading}
-                  color="violet"
+                  color='violet'
                   fluid
-                  size="large"
+                  size='large'
                 >
                   Submit
                 </Button>
@@ -117,7 +117,7 @@ class Login extends Component {
               </Message>
             )}
             <Message>
-              Don't have an account? <Link to="/register">Register</Link>
+              Don't have an account? <Link to='/register'>Register</Link>
             </Message>
           </Grid.Column>
         </Grid>
