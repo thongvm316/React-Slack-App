@@ -52,7 +52,6 @@ class Channels extends Component {
       loadedChannels.push(snap.val())
       this.setState({ channels: loadedChannels }, () => {
         this.setFirstChannel()
-        // this.setState({ channel: loadedChannels[0] })
       })
       this.addNotifications(snap.key)
     })
@@ -125,7 +124,7 @@ This event will trigger once with the initial data stored at this location, and 
   // add channels to realtime database
   addChannel = () => {
     const { channelsRef, channelName, channelDetails, user } = this.state
-    const key = channelsRef.push().key // get uuid
+    const key = channelsRef.push().key // create new key (property) in channels obj, then get that key and store to variable
 
     const newChannel = {
       id: key,
@@ -140,7 +139,7 @@ This event will trigger once with the initial data stored at this location, and 
     // Get value from Form and store to Realtime Database
     channelsRef
       .child(key)
-      .update(newChannel)
+      .update(newChannel) // set value for key which is created above
       .then(() => {
         this.setState({ channelName: '', channelDetails: '' })
         this.closeModal()
@@ -186,7 +185,7 @@ This event will trigger once with the initial data stored at this location, and 
           active={channel.id === this.state.activeChannel}
         >
           {this.getNotificationCount(channel) && (
-            <Label color="red">{this.getNotificationCount(channel)}</Label>
+            <Label color='red'>{this.getNotificationCount(channel)}</Label>
           )}
           # {channel.name}
         </Menu.Item>
@@ -213,9 +212,8 @@ This event will trigger once with the initial data stored at this location, and 
 
     if (index !== -1) {
       let updatedNotifications = [...this.state.notifications]
-      updatedNotifications[index].total = this.state.notifications[
-        index
-      ].lastKnownTotal
+      updatedNotifications[index].total =
+        this.state.notifications[index].lastKnownTotal
       updatedNotifications[index].count = 0
       this.setState({ notifications: updatedNotifications })
     }
@@ -236,12 +234,12 @@ This event will trigger once with the initial data stored at this location, and 
 
     return (
       <>
-        <Menu.Menu style={{ paddingBottom: '2rem' }} className="menu">
+        <Menu.Menu style={{ paddingBottom: '2rem' }} className='menu'>
           <Menu.Item>
             <span>
-              <Icon name="exchange" /> CHANNELS
+              <Icon name='exchange' /> CHANNELS
             </span>
-            ({channels.length}) <Icon name="add" onClick={this.openModal} />
+            ({channels.length}) <Icon name='add' onClick={this.openModal} />
           </Menu.Item>
           {this.displayChannel(channels)}
         </Menu.Menu>
@@ -254,8 +252,8 @@ This event will trigger once with the initial data stored at this location, and 
               <Form.Field>
                 <Input
                   fluid
-                  label="Name of Channel"
-                  name="channelName"
+                  label='Name of Channel'
+                  name='channelName'
                   onChange={this.handleChange}
                 />
               </Form.Field>
@@ -263,8 +261,8 @@ This event will trigger once with the initial data stored at this location, and 
               <Form.Field>
                 <Input
                   fluid
-                  label="About the Channel"
-                  name="channelDetails"
+                  label='About the Channel'
+                  name='channelDetails'
                   onChange={this.handleChange}
                 />
               </Form.Field>
@@ -272,11 +270,11 @@ This event will trigger once with the initial data stored at this location, and 
           </Modal.Content>
 
           <Modal.Actions>
-            <Button color="green" inverted onClick={this.handleSubmit}>
-              <Icon name="checkmark" /> Add
+            <Button color='green' inverted onClick={this.handleSubmit}>
+              <Icon name='checkmark' /> Add
             </Button>
-            <Button color="red" inverted onClick={this.closeModal}>
-              <Icon name="remove" /> Cancel
+            <Button color='red' inverted onClick={this.closeModal}>
+              <Icon name='remove' /> Cancel
             </Button>
           </Modal.Actions>
         </Modal>

@@ -1,22 +1,22 @@
 Strategy:
 
-1. Review - Deep understand function
-2. Check all features and improve its
+A. Review - Deep understand function
+B. Check all features and improve its
 
 ---
 
-3. Redux --- Done
-4. Authentication
+1. Redux --- Done
+2. Authentication
    1. Login --- Done
-   2. Register
-5. Color Panel
-6. Meta Panel
-7. SidePanel
-   1. Channels
-   2. DirectMessages
-   3. Started
-   4. UserPanel
-8. Messages
+   2. Register --- Done
+3. Color Panel --- Done
+4. Meta Panel --- Done
+5. SidePanel
+   1. Channels --- Done
+   2. DirectMessages --- Done
+   3. Started --- Done
+   4. UserPanel --- Done
+6. Messages
    1. FileModal
    2. Message
    3. MessageForm

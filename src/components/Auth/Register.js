@@ -23,7 +23,7 @@ class Register extends Component {
     usersRef: firebase.database().ref('users'), // create collection users
   }
 
-  /* ------- Hanlde Err */
+  /* ------- Hanlde Err ------- */
   isFormValid = () => {
     let errors = []
     let error
@@ -47,7 +47,7 @@ class Register extends Component {
       !email.length ||
       !password.length ||
       !passwordConfirmation.length
-    )
+    ) // purpose use ! --> get boolen value
   }
 
   isPasswordValid = ({ password, passwordConfirmation }) => {
@@ -71,7 +71,7 @@ class Register extends Component {
 
   displayErrors = (errors) =>
     errors.map((error, i) => <p key={i}>{error.message}</p>)
-  /* ------- Hanlde Err */
+  /* ------- Hanlde Err ------- */
 
   handleChange = (event) => {
     this.setState({ [event.target.name]: event.target.value })
@@ -124,81 +124,75 @@ class Register extends Component {
       name: createdUser.user.displayName,
       avatar: createdUser.user.photoURL,
     })
-  }
+  } // .set --> obj: name, avatar
 
   render() {
-    const {
-      username,
-      email,
-      password,
-      passwordConfirmation,
-      loading,
-      errors,
-    } = this.state
+    const { username, email, password, passwordConfirmation, loading, errors } =
+      this.state
 
     return (
       <div>
-        <Grid textAlign="center" verticalAlign="middle" className="app">
+        <Grid textAlign='center' verticalAlign='middle' className='app'>
           <Grid.Column style={{ maxWidth: 450 }}>
-            <Header as="h2" color="orange" textAlign="center">
-              <Icon name="puzzle piece" color="orange" />
+            <Header as='h2' color='orange' textAlign='center'>
+              <Icon name='puzzle piece' color='orange' />
               Register for DevChat
             </Header>
-            <Form onSubmit={this.handleSubmit} size="large">
+            <Form onSubmit={this.handleSubmit} size='large'>
               <Segment stacked>
                 <Form.Input
                   fluid
-                  name="username"
-                  icon="user"
-                  iconPosition="left"
-                  placeholder="Username"
+                  name='username'
+                  icon='user'
+                  iconPosition='left'
+                  placeholder='Username'
                   onChange={this.handleChange}
                   value={username}
-                  type="text"
+                  type='text'
                 />
 
                 <Form.Input
                   fluid
-                  name="email"
-                  icon="mail"
-                  iconPosition="left"
-                  placeholder="Email Address"
+                  name='email'
+                  icon='mail'
+                  iconPosition='left'
+                  placeholder='Email Address'
                   onChange={this.handleChange}
                   value={email}
                   className={this.handleInputError(errors, 'email')}
-                  type="email"
+                  type='email'
                 />
 
                 <Form.Input
                   fluid
-                  name="password"
-                  icon="lock"
-                  iconPosition="left"
-                  placeholder="Password"
+                  name='password'
+                  icon='lock'
+                  iconPosition='left'
+                  placeholder='Password'
                   onChange={this.handleChange}
                   value={password}
                   className={this.handleInputError(errors, 'password')}
-                  type="password"
+                  type='password'
                 />
 
                 <Form.Input
                   fluid
-                  name="passwordConfirmation"
-                  icon="lock"
-                  iconPosition="left"
-                  placeholder="Password Confirmation"
+                  name='passwordConfirmation'
+                  icon='lock'
+                  iconPosition='left'
+                  placeholder='Password Confirmation'
                   onChange={this.handleChange}
                   value={passwordConfirmation}
                   className={this.handleInputError(errors, 'password')}
-                  type="password"
+                  type='password'
                 />
 
                 <Button
                   className={loading ? 'loading' : ''}
                   disabled={loading}
-                  color="orange"
+                  color='orange'
                   fluid
-                  size="large"
+                  size='large'
                 >
                   Submit
                 </Button>
@@ -211,7 +205,7 @@ class Register extends Component {
               </Message>
             )}
             <Message>
-              Already a user? <Link to="/login">Login</Link>
+              Already a user? <Link to='/login'>Login</Link>
             </Message>
           </Grid.Column>
         </Grid>

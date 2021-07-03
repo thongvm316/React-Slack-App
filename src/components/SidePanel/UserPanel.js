@@ -55,16 +55,6 @@ class UserPanel extends Component {
     },
   ]
 
-  // componentDidMount() {
-  //   console.log(
-  //     'Sign out',
-  //     this.state.user.uid,
-  //     this.state.presenceRef.child(this.state.user.uid),
-  //   )
-
-  //   this.state.presenceRef.child(this.state.user.uid).remove()
-  // }
-
   handleSignout = () => {
     this.state.presenceRef.child(this.state.user.uid).remove((err) => {
       if (err !== null) {

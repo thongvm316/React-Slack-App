@@ -43,7 +43,7 @@ class Starred extends Component {
       .child('starred')
       .on('child_removed', (snap) => {
         const channelToRemove = { id: snap.key, ...snap.val() }
-        console.log('child_removed', channelToRemove)
+        // console.log('child_removed', channelToRemove)
         const filteredChannels = this.state.starredChannels.filter(
           (channel) => {
             return channel.id !== channelToRemove.id
@@ -86,10 +86,10 @@ class Starred extends Component {
     const { starredChannels } = this.state
 
     return (
-      <Menu.Menu style={{ paddingBottom: '2rem' }} className="menu">
+      <Menu.Menu style={{ paddingBottom: '2rem' }} className='menu'>
         <Menu.Item>
           <span>
-            <Icon name="star" /> Starred
+            <Icon name='star' /> Starred
           </span>
           ({starredChannels.length})
         </Menu.Item>

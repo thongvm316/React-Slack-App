@@ -41,7 +41,7 @@ class DirectMessages extends Component {
         user['status'] = 'offline'
         loadedUsers.push(user)
         this.setState({ users: loadedUsers })
-      } // look for user offline
+      }
     })
 
     this.state.connectedRef.on('value', (snap) => {
@@ -80,6 +80,7 @@ Note that onDisconnect operations are only triggered once. If you want an operat
   }
 
   addStatusToUser = (userId, connected = true) => {
+    console.log(userId)
     const updateUsers = this.state.users.reduce((acc, user) => {
       if (user.uid === userId) {
         user['status'] = `${connected ? 'online' : 'offline'}`
@@ -123,10 +124,10 @@ Note that onDisconnect operations are only triggered once. If you want an operat
     const { users, activeChannel } = this.state
 
     return (
-      <Menu.Menu className="menu">
+      <Menu.Menu className='menu'>
         <Menu.Item>
           <span>
-            <Icon name="mail" /> DIRECT MESSAGES
+            <Icon name='mail' /> DIRECT MESSAGES
           </span>
           ({users.length})
         </Menu.Item>
@@ -139,7 +140,7 @@ Note that onDisconnect operations are only triggered once. If you want an operat
             style={{ opacity: 0.7, fontStyle: 'italic' }}
           >
             <Icon
-              name="circle"
+              name='circle'
               color={this.isUserOnline(user) ? 'green' : 'red'}
             />
             @ {user.name}
