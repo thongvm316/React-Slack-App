@@ -42,8 +42,7 @@ class Messages extends React.Component {
     }
   }
 
-  componentDidUpdate(prevProps, prevState) {
-    // console.log('componentDidUpdate')
+  componentDidUpdate() {
     if (this.messageEnd) {
       this.scrollToBottom()
     }
@@ -74,17 +73,7 @@ class Messages extends React.Component {
 
   addToListeners = (id, ref, event) => {
     const { listeners } = this.state
-    // console.table({ id, ref, event, listeners })
     const index = listeners.findIndex((listener) => {
-      // const obj = {
-      //   listenerId: listener.id,
-      //   listenerRef: listener.ref,
-      //   listenerEvent: listener.event,
-      //   id,
-      //   ref,
-      //   event,
-      // }
-      // console.table({ listener, obj })
       return (
         listener.id === id && listener.ref === ref && listener.event === event
       )
@@ -268,8 +257,6 @@ class Messages extends React.Component {
 
   countUserPosts = (messages) => {
     let userPosts = messages.reduce((acc, message) => {
-      // console.log(acc, message)
-      // console.log(message.user.name in acc)
       if (message.user.name in acc) {
         acc[message.user.name].count += 1
       } else {
@@ -306,18 +293,17 @@ class Messages extends React.Component {
         style={{ display: 'flex', alignItems: 'center', marginBottom: '0.2em' }}
         key={user.id}
       >
-        <span className="user__typing">{user.name} is typing</span> <Typing />
+        <span className='user__typing'>{user.name} is typing</span> <Typing />
       </div>
     ))
 
   displayMessageSkeleton = (loading) => {
-    // console.log(this.state.messagesLoading)
     return loading ? (
-      <React.Fragment>
+      <>
         {[...Array(10)].map((_, i) => {
           return <Skeleton key={i} />
         })}
-      </React.Fragment>
+      </>
     ) : null
   }
 
@@ -350,7 +336,7 @@ class Messages extends React.Component {
         />
 
         <Segment>
-          <Comment.Group className="messages">
+          <Comment.Group className='messages'>
             {this.displayMessageSkeleton(messagesLoading)}
             {searchTerm
               ? this.displayMessages(searchResults)
